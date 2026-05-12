@@ -19,6 +19,7 @@ Everything in this app runs on **free, public, open-source data**. No API keys. 
 
 ### 🗺️ Route Map
 - Enter any origin and destination — the map updates instantly
+- Route follows **actual roads and highways** via OSRM (OpenStreetMap routing engine)
 - Plots your full route with labeled Safe-Haven stops (truck stops, rest areas, pet parks)
 - Toggle a **live NOAA weather radar overlay** directly on the map
 - Toggle **live fuel station markers** pulled from OpenStreetMap — filter by:
@@ -117,6 +118,7 @@ Everything used in this app is free, open-source, or public domain.
 | App framework | [Streamlit](https://streamlit.io) | Apache 2.0 |
 | Maps | [Folium](https://python-visualization.github.io/folium/) + [streamlit-folium](https://github.com/randyzwitch/streamlit-folium) | MIT |
 | Map tiles | [CARTO Dark Matter](https://carto.com/basemaps/) via OpenStreetMap | © CARTO / ODbL |
+| Road routing | [OSRM](http://project-osrm.org/) (Open Source Routing Machine) | BSD 2-Clause — Free, no key |
 | Geocoding | [Nominatim](https://nominatim.openstreetmap.org/) (OpenStreetMap) | ODbL — Free |
 | Distance math | [geopy](https://geopy.readthedocs.io/) geodesic | MIT |
 | Weather data | [Open-Meteo](https://open-meteo.com/) | CC-BY 4.0 — Free, no key |
