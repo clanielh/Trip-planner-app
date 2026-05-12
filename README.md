@@ -3,7 +3,7 @@
 A free, open-source moving trip planning dashboard built with Python and Streamlit.  
 No account required. No ads. No data collected. Works in any browser.
 
-**[▶ Launch the Live App](https://your-app-url.streamlit.app)** ← *(update this link after deploying)*
+**[▶ Launch the Live App](https://tripplanningapp.streamlit.app/)**
 
 ---
 
