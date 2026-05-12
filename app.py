@@ -324,6 +324,22 @@ def fetch_weather(lat: float, lon: float):
     except Exception:
         return {}
 
+@st.cache_data(show_spinner=False)
+def fetch_road_route(origin_lat, origin_lon, dest_lat, dest_lon):
+    """Query OSRM for real road geometry between two points."""
+    url = (
+        f"http://router.project-osrm.org/route/v1/driving/"
+        f"{origin_lon},{origin_lat};{dest_lon},{dest_lat}"
+        f"?overview=full&geometries=geojson"
+    )
+    try:
+        r = requests.get(url, timeout=15)
+        r.raise_for_status()
+        coords = r.json()["routes"][0]["geometry"]["coordinates"]
+        return [[c[1], c[0]] for c in coords]   # OSRM gives [lon,lat] → flip to [lat,lon]
+    except Exception:
+        return None
+
 @st.cache_data(ttl=3600, show_spinner=False)
 def fetch_fuel_stations(south: float, west: float, north: float, east: float):
     query = (
@@ -594,9 +610,17 @@ with tab_map:
         ).add_to(m)
         folium.LayerControl().add_to(m)
 
-    # Route line
-    route_coords = [[p[0], p[1]] for p in route_points_latlon]
-    folium.PolyLine(route_coords, color="#4fc3f7", weight=3, opacity=0.8, dash_array="8").add_to(m)
+    # Route line — real road geometry from OSRM (OpenStreetMap routing)
+    with st.spinner("Loading road route…"):
+        road_geom = fetch_road_route(ORIGIN["lat"], ORIGIN["lon"], dest_lat, dest_lon)
+
+    if road_geom:
+        folium.PolyLine(road_geom, color="#4fc3f7", weight=4, opacity=0.85).add_to(m)
+    else:
+        # Fallback: straight lines between waypoints if OSRM is unavailable
+        fallback_coords = [[p[0], p[1]] for p in route_points_latlon]
+        folium.PolyLine(fallback_coords, color="#4fc3f7", weight=3, opacity=0.7, dash_array="8").add_to(m)
+        st.caption("⚠️ Road routing unavailable — showing straight-line estimate.")
 
     # Origin / destination markers
     folium.Marker(
